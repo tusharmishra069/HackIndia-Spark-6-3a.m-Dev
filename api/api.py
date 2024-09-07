@@ -7,7 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 app = Flask(__name__)
 
 # Connect to IPFS
-client = ipfshttpclient.connect('/ip4/127.0.0.1/tcp/5001')
+client = ipfshttpclient.connect('http://127.0.0.1:8080')
 model_cid = "QmWvFgPaZAKfZu7hmG3Z7Fc7oGejewmUrw3bvXBLHbP8PW"
 
 # Load the model from IPFS

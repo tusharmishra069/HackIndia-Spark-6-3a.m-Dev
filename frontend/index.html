@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Market</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #priceInput { margin-bottom: 10px; }
+        #updateButton { background-color: #4CAF50; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        #updateButton:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h1>Update Prediction Price</h1>
+    <input type="number" id="priceInput" placeholder="Enter predicted price">
+    <button id="updateButton">Update Price</button>
+    <h2>Current Predicted Price</h2>
+    <div id="predictedPrice">Fetching...</div>
+    <script>
+        async function fetchPrediction() {
+            try {
+                const response = await fetch('http://localhost:3000/api/predict');
+                const data = await response.json();
+                document.getElementById('predictedPrice').innerText = data.predicted_price || 'Error fetching prediction';
+            } catch (error) {
+                document.getElementById('predictedPrice').innerText = 'Error fetching prediction';
+            }
+        }
+
+        document.getElementById('updateButton').onclick = async function() {
+            const price = document.getElementById('priceInput').value;
+            
+            const response = await fetch('http://localhost:3000/api/updatePrice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ price: price }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.status);
+                fetchPrediction(); // Refresh the displayed prediction
+            } else {
+                alert('Error: ' + data.error);
+            }
+        }
+
+        // Initial fetch of the prediction
+        fetchPrediction();
+    </script>
+</body>
+</html>
